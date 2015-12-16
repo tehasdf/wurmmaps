@@ -122,11 +122,10 @@ class MapComponent extends React.Component {
 }
 
 const mapStateToProps = state => {
-    console.log('xd', state);
     return {
         map: state.maps[state.selectedMap]
     }
 };
 
 
-export default connect(mapStateToProps)(MapComponent);
+export default MapComponent;

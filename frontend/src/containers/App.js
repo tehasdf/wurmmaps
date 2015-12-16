@@ -7,7 +7,8 @@ import MapList from '../components/MapList';
 
 const mapStateToProps = state => {
     return {
-
+        selected: state.selectedMap,
+        maps: state.maps
     }
 }
 
@@ -36,10 +37,10 @@ class App extends Component {
 
 
     render(){
-        return <div>
-            <MapList />
-            <MapTiles />
-
+        return <div className="fill">
+            {this.props.selected
+                ? <MapTiles map={this.props.maps[this.props.selected]} />
+                : <MapList maps={this.props.maps} />}
         </div>
     }
 }

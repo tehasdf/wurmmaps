@@ -18,7 +18,7 @@ class MapList extends Component {
 
 
     mapSelect(map){
-        this.props.dispatch(selectMap(map.id));
+        this.props.dispatch(selectMap(`${map.id}`));
     }
 
     render(){
@@ -44,4 +44,4 @@ class MapList extends Component {
 }
 
 
-export default connect(mapStateToProps)(MapList);
+export default MapList;
