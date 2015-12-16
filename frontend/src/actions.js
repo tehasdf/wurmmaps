@@ -10,7 +10,7 @@ const mapsListReceived = createAction('MAPS_LIST_RECEIVED');
 export const fetchMaps = () => (dispatch, getState) => {
     dispatch(startGetMapsList());
 
-    return fetch('http://localhost/9k/api/')
+    return fetch('http://localhost/maps/')
         .then(r => r.json())
         .then(data => dispatch(mapsListReceived(data)));
 }

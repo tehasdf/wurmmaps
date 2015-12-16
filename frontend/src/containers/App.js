@@ -17,7 +17,7 @@ class App extends Component {
 
 
     render(){
-        <div>asd</div>
+        return <div>asd</div>
     }
 }
 
