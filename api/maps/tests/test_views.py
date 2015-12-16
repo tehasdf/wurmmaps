@@ -34,7 +34,7 @@ class TestWriting(TestCase):
         self.assertEqual(response.data['name'], 'foobar')
 
     def test_update_by_view_id(self):
-        response = self.client.patch(reverse('maps-detail', kwargs={'id': self.obj.edit_id}),
+        response = self.client.patch(reverse('maps-detail', kwargs={'id': self.obj.view_id}),
             json.dumps({'name': 'foobar'}), content_type='application/json')
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.data['name'], 'the map')
+

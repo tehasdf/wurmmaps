@@ -3,9 +3,18 @@ from django.http import Http404
 
 from rest_framework import viewsets
 from rest_framework.generics import get_object_or_404
+from rest_framework.permissions import BasePermission, SAFE_METHODS
 
 from maps.models import Map
 from maps.serializers import MapSerializer
+
+
+class OnlyEditByEditID(BasePermission):
+    def has_object_permission(self, request, view, obj):
+        used_id = view.kwargs['id']
+        if request.method not in SAFE_METHODS and obj.edit_id != used_id:
+            return False
+        return True
 
 
 class MapViewSet(viewsets.ModelViewSet):
@@ -13,7 +22,7 @@ class MapViewSet(viewsets.ModelViewSet):
 
     queryset = Map.objects.all()
     serializer_class = MapSerializer
-    permission_classes = []
+    permission_classes = [OnlyEditByEditID]
 
     def get_object(self):
         """Try getting the object by both edit_id and view_id
