@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {fetchMaps} from '../actions';
+import MapTiles from '../components/MapTiles';
 
 
 const mapStateToProps = state => {
@@ -17,7 +18,7 @@ class App extends Component {
 
 
     render(){
-        return <div>asd</div>
+        return <MapTiles edit={true} />
     }
 }
 
