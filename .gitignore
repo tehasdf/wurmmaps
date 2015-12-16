@@ -3,3 +3,5 @@
 *.sublime-*
 node_modules
 dist/*.js
+tiles/*
+!tiles/maketiles.sh
