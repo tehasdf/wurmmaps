@@ -1,16 +1,21 @@
 from django.conf.urls import url, include
 from django.contrib import admin
 
-from rest_framework.routers import DefaultRouter
+from rest_framework_nested.routers import SimpleRouter, NestedSimpleRouter
 
-from maps.views import MapViewSet
+from maps.views import MapViewSet, MapFeaturesViewSet
 
-router = DefaultRouter()
+router = SimpleRouter()
 router.register('maps', MapViewSet, 'maps')
+
+features_router = NestedSimpleRouter(router, 'maps', lookup='map')
+features_router.register('features', MapFeaturesViewSet)
+
 
 
 urlpatterns = [
     url(r'^', include(router.urls)),
+    url(r'^', include(features_router.urls)),
     url(r'^admin/', admin.site.urls),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]

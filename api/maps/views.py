@@ -5,13 +5,20 @@ from rest_framework import viewsets
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
-from maps.models import Map
-from maps.serializers import MapSerializer
+from maps.models import Map, MapFeature
+from maps.serializers import MapSerializer, MapFeatureSerializer
 
 
 class OnlyEditByEditID(BasePermission):
     def has_object_permission(self, request, view, obj):
         used_id = view.kwargs['id']
+        if request.method not in SAFE_METHODS and obj.edit_id != used_id:
+            return False
+        return True
+
+class OnlyEditRelatedByEditID(BasePermission):
+    def has_object_permission(self, request, view, obj):
+        used_id = view.kwargs['map_id']
         if request.method not in SAFE_METHODS and obj.edit_id != used_id:
             return False
         return True
@@ -47,3 +54,10 @@ class MapViewSet(viewsets.ModelViewSet):
         self.check_object_permissions(self.request, obj)
 
         return obj
+
+
+class MapFeaturesViewSet(viewsets.ModelViewSet):
+    queryset = MapFeature.objects.all()
+    serializer_class = MapFeatureSerializer
+
+    permission_classes = [OnlyEditRelatedByEditID]
