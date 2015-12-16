@@ -6,7 +6,7 @@ from rest_framework.routers import DefaultRouter
 from maps.views import MapViewSet
 
 router = DefaultRouter()
-router.register('maps', MapViewSet)
+router.register('maps', MapViewSet, 'maps')
 
 
 urlpatterns = [
