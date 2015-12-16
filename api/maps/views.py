@@ -61,3 +61,11 @@ class MapFeaturesViewSet(viewsets.ModelViewSet):
     serializer_class = MapFeatureSerializer
 
     permission_classes = [OnlyEditRelatedByEditID]
+
+    def filter_queryset(self, qset):
+        if not 'map' in self.request.GET:
+            return None
+        map_id = self.request.GET['map']
+        return (qset.select_related('map')
+            .filter(Q(map__edit_id=map_id) | Q(map__view_id=map_id))
+        )

@@ -7,15 +7,12 @@ from maps.views import MapViewSet, MapFeaturesViewSet
 
 router = SimpleRouter()
 router.register('maps', MapViewSet, 'maps')
-
-features_router = NestedSimpleRouter(router, 'maps', lookup='map')
-features_router.register('features', MapFeaturesViewSet)
+router.register('features', MapFeaturesViewSet, 'features')
 
 
 
 urlpatterns = [
     url(r'^', include(router.urls)),
-    url(r'^', include(features_router.urls)),
     url(r'^admin/', admin.site.urls),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]
