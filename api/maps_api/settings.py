@@ -52,7 +52,7 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'maps.urls'
+ROOT_URLCONF = 'maps_api.urls'
 
 TEMPLATES = [
     {
@@ -70,7 +70,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'maps.wsgi.application'
+WSGI_APPLICATION = 'maps_api.wsgi.application'
 
 
 # Database
