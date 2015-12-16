@@ -6,8 +6,12 @@ from django.db import models
 
 
 class Map(models.Model):
+    edit_id = models.TextField(max_length=32)
+    view_id = models.TextField(max_length=32)
+
     name = models.TextField()
     description = models.TextField()
+
 
 
 class MapFeature(models.Model):
