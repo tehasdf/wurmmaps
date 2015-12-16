@@ -1,3 +1,5 @@
 .venv
 *.pyc
 *.sublime-*
+node_modules
+dist/*.js
