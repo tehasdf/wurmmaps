@@ -9,14 +9,22 @@ const rootReducer = handleActions({
         });
 
         return {
-            maps: Object.assign({}, state.maps, byId),
+            ...state,
+            maps: {...state.maps, ...byId}
         }
     },
     START_MAPS_LIST: (state, action) => {
         return {
+            ...state,
             mapListFetched: true
         }
+    },
+    MAP_SELECTED: (state, action) => {
+        return {
+            ...state,
+            selectedMap: action.payload
+        }
     }
-}, {maps: [], mapListFetched: false});
+}, {maps: {}, mapListFetched: false, selectedMap: null});
 
 export default rootReducer;

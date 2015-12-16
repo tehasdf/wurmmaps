@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {fetchMaps} from '../actions';
+import {fetchMaps, selectMap} from '../actions';
 
 
 const mapStateToProps = state => {
@@ -9,14 +9,20 @@ const mapStateToProps = state => {
     }
 }
 
+
+const MapListItem = props => (
+    <li><a onClick={evt => props.clicked()}>{props.name}</a></li>
+)
+
 class MapList extends Component {
-    componentDidMount(){
-        const {dispatch} = this.props;
-        dispatch(fetchMaps());
+
+
+    mapSelect(map){
+        this.props.dispatch(selectMap(map.id));
     }
 
-
     render(){
+        let self = this;
         if (!this.props || !this.props.maps){
             return null;
         }
@@ -27,7 +33,11 @@ class MapList extends Component {
         return <ul>
             {Object.keys(maps).map(k => {
                 let map = maps[k];
-                return <li key={map.id}>{map.name}</li>
+                return <MapListItem
+                    key={map.id}
+                    name={map.name}
+                    clicked={e => self.mapSelect(map)}
+                />
             })}
         </ul>
     }

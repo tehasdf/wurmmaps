@@ -2,6 +2,7 @@ import React from 'react';
 import L from 'leaflet';
 import Draw from 'leaflet-draw';
 import {Map, Rectangle, TileLayer} from 'react-leaflet';
+import {connect} from 'react-redux';
 
 const SS = L.extend({}, L.CRS, {
     projection: L.Projection.LonLat,
@@ -120,4 +121,12 @@ class MapComponent extends React.Component {
     }
 }
 
-export default MapComponent;
+const mapStateToProps = state => {
+    console.log('xd', state);
+    return {
+        map: state.maps[state.selectedMap]
+    }
+};
+
+
+export default connect(mapStateToProps)(MapComponent);
