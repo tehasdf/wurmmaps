@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
+from django.conf import settings
 from django.db.models import Q
-
 from django.db import models
 
 
@@ -19,6 +19,7 @@ class Map(models.Model):
     name = models.TextField()
     description = models.TextField()
 
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, null=True)
 
 
 class MapFeature(models.Model):

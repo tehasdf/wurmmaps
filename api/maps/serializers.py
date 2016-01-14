@@ -6,8 +6,16 @@ from .models import Map, MapFeature
 class MapSerializer(serializers.ModelSerializer):
     class Meta:
         model = Map
-        fields = '__all__'
+        exclude = ['id', 'edit_id', 'view_id', 'owner']
 
+    id = serializers.SerializerMethodField()
+
+    def get_id(self, obj):
+        user = self.context['request'].user
+        if user == obj.owner or user.is_superuser:
+            return obj.edit_id
+        else:
+            return obj.view_id
 
 
 class MapFeatureSerializer(serializers.ModelSerializer):
