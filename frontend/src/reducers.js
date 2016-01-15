@@ -13,18 +13,21 @@ const rootReducer = handleActions({
             maps: {...state.maps, ...byId}
         }
     },
-    START_MAPS_LIST: (state, action) => {
-        return {
-            ...state,
-            mapListFetched: true
-        }
-    },
     MAP_SELECTED: (state, action) => {
         return {
             ...state,
             selectedMap: action.payload
         }
+    },
+    MAP_DETAILS_RECEIVED: (state, action) => {
+        let newMaps = {};
+        newMaps[action.payload.id] = action.payload;
+
+        return {
+            ...state,
+            maps: {...state.maps, ...newMaps}
+        }
     }
-}, {maps: {}, mapListFetched: false, selectedMap: null});
+}, {maps: {}, selectedMap: null, selectedType: 1});
 
 export default rootReducer;

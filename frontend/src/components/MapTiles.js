@@ -4,6 +4,8 @@ import Draw from 'leaflet-draw';
 import {Map, Rectangle, TileLayer} from 'react-leaflet';
 import {connect} from 'react-redux';
 
+import {createFeature} from '../actions';
+
 const SS = L.extend({}, L.CRS, {
     projection: L.Projection.LonLat,
     transformation: new L.Transformation(1, 0, 1, 0)
@@ -22,11 +24,11 @@ componentWillMount() {
 
 
 const elementFactory = {
-    reveal(map, data){
+    1: function(map, feature){
         var size = map.unproject([120, 120], 4);
-
-        var lat = data.payload.lat;
-        var lng = data.payload.lng;
+        var data = feature.data;
+        var lat = data.lat;
+        var lng = data.lng;
         var coords = L.latLngBounds(
             L.latLng({lat: lat, lng: lng}),
             L.latLng({lat: lat + size.lat, lng: lng + size.lng})
@@ -51,6 +53,7 @@ const elementFactory = {
 
 
         return <DraggableOnlyRectangle
+            key={feature.id}
             bounds={coords}
             editable={data.edit}
             onLeafletEdit={onEdit}
@@ -90,26 +93,27 @@ class MapComponent extends React.Component {
 
     mapClick(evt){
         // ElementActions.mapClick(evt.latlng);
+        this.props.dispatch(createFeature(evt.latlng));
     }
 
     render(){
+        if (!this.props.map || !this.props.features){
+            return null;
+        }
         var selected = this.state.layers;
         var elements = [];
-
         if (this.refs.map){
             var map = this.refs.map.getLeafletElement();
 
-            this.state.elements.forEach(data => {
-                if (!selected[data.layer]){
-                    return;
-                }
-                var factory = elementFactory[data.kind];
+            this.props.features.forEach(feature => {
+                var factory = elementFactory[feature.feature_type];
                 if (factory){
-                    data.edit = true; //this.context.edit;
-                    elements.push(factory(map, data))
+                    feature.edit = true; //this.context.edit;
+                    elements.push(factory(map, feature))
                 }
             })
         }
+        console.log('xd', this.props.features, elements)
 
         return <Map ref="map" className="fill" center={[0.08, 0.66]} zoom={4} crs={SS} onLeafletClick={this.mapClick.bind(this)}>
             <TileLayer
@@ -122,10 +126,11 @@ class MapComponent extends React.Component {
 }
 
 const mapStateToProps = state => {
-    return {
-        map: state.maps[state.selectedMap]
-    }
+    let map = state.maps[state.selectedMap];
+    let features = (map !== undefined) ? state.maps[state.selectedMap].features : [];
+
+    return {map, features}
 };
 
 
-export default MapComponent;
+export default connect(mapStateToProps)(MapComponent);

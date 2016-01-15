@@ -1,14 +1,13 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {fetchMaps, selectMap} from '../actions';
-import MapTiles from '../components/MapTiles';
+import Map from './Map';
 import MapList from '../components/MapList';
 
 
 const mapStateToProps = state => {
     return {
-        selected: state.selectedMap,
-        maps: state.maps
+        selected: state.selectedMap
     }
 }
 
@@ -30,17 +29,14 @@ class App extends Component {
         let parts = parseHash(window.location.hash);
         if (parts.map){
             dispatch(selectMap(parts.map));
-        } else {
-            dispatch(fetchMaps());
         }
     }
-
 
     render(){
         return <div className="fill">
             {this.props.selected
-                ? <MapTiles map={this.props.maps[this.props.selected]} />
-                : <MapList maps={this.props.maps} />}
+                ? <Map mapId={this.props.selected} />
+                : <MapList />}
         </div>
     }
 }

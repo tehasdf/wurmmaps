@@ -14,8 +14,13 @@ const MapListItem = props => (
     <li><a onClick={evt => props.clicked()}>{props.name}</a></li>
 )
 
+
 class MapList extends Component {
 
+    componentDidMount(){
+        const {dispatch} = this.props;
+        dispatch(fetchMaps());
+    }
 
     mapSelect(map){
         this.props.dispatch(selectMap(`${map.id}`));
@@ -44,4 +49,4 @@ class MapList extends Component {
 }
 
 
-export default MapList;
+export default connect(mapStateToProps)(MapList);
