@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 from django.conf import settings
 from django.db.models import Q
 from django.db import models
-
+from jsonfield import JSONField
 
 
 class MapQuerySet(models.QuerySet):
@@ -30,4 +30,4 @@ class MapFeature(models.Model):
 
     feature_type = models.SmallIntegerField(choices=FEATURE_TYPES)
     map = models.ForeignKey(to=Map, related_name='features')
-    data = models.BinaryField()
+    data = JSONField()
