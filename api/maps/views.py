@@ -6,7 +6,7 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
 from maps.models import Map, MapFeature
-from maps.serializers import MapSerializer, MapFeatureSerializer
+from maps.serializers import MapSerializer, ShortMapSerializer, MapFeatureSerializer
 
 
 class OnlyEditByEditID(BasePermission):
@@ -55,6 +55,11 @@ class MapViewSet(viewsets.ModelViewSet):
 
         return obj
 
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return ShortMapSerializer
+        return super(MapViewSet, self).get_serializer_class()
+
 
 class MapFeaturesViewSet(viewsets.ModelViewSet):
     queryset = MapFeature.objects.all()
@@ -65,6 +70,7 @@ class MapFeaturesViewSet(viewsets.ModelViewSet):
     def filter_queryset(self, qset):
         if not 'map' in self.request.GET:
             return None
+
         map_id = self.request.GET['map']
         return (qset.select_related('map')
             .filter(Q(map__edit_id=map_id) | Q(map__view_id=map_id))

@@ -3,7 +3,7 @@ from .models import Map, MapFeature
 
 
 
-class MapSerializer(serializers.ModelSerializer):
+class ShortMapSerializer(serializers.ModelSerializer):
     class Meta:
         model = Map
         exclude = ['id', 'edit_id', 'view_id', 'owner']
@@ -21,9 +21,9 @@ class MapSerializer(serializers.ModelSerializer):
 class MapFeatureSerializer(serializers.ModelSerializer):
     class Meta:
         model = MapFeature
-        fields = ['feature_type', 'data', 'map']
+        fields = ['id', 'feature_type', 'data', 'map']
 
-    map = serializers.CharField(max_length=32)
+    map = serializers.CharField(write_only=True)
 
 
     def validate_map(self, value):
@@ -31,3 +31,7 @@ class MapFeatureSerializer(serializers.ModelSerializer):
         if map_obj.edit_id == value:
             return map_obj
         raise serializers.ValidationError('Incorrect map id')
+
+
+class MapSerializer(ShortMapSerializer):
+    features = MapFeatureSerializer(many=True, read_only=True)

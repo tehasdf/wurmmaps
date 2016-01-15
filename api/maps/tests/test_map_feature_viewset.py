@@ -59,6 +59,5 @@ class TestAddingMapFeatures(TestCase):
 
         response = self.client.post(reverse('features-list'),
             json.dumps(data), content_type='application/json')
-        print response
         self.assertEqual(response.status_code, 400)
         self.assertEqual(self.obj.features.count(), 0)
