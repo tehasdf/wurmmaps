@@ -3,7 +3,7 @@ from .models import Map, MapFeature
 
 
 
-class ShortMapSerializer(serializers.ModelSerializer):
+class MapSerializer(serializers.ModelSerializer):
     class Meta:
         model = Map
         exclude = ['id', 'edit_id', 'view_id', 'owner']
@@ -33,5 +33,18 @@ class MapFeatureSerializer(serializers.ModelSerializer):
         raise serializers.ValidationError('Incorrect map id')
 
 
-class MapSerializer(ShortMapSerializer):
+class MapViewSerializer(MapSerializer):
     features = MapFeatureSerializer(many=True, read_only=True)
+    edit = serializers.SerializerMethodField()
+
+    def get_edit(self, obj):
+        return False
+
+
+class MapEditSerializer(MapViewSerializer):
+    class Meta:
+        model = Map
+        exclude = ['id']
+
+    def get_edit(self, obj):
+        return True
