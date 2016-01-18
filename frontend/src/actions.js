@@ -11,7 +11,12 @@ const startGetMapDetails = createAction('START_MAP_DETAILS');
 const mapDetailsReceived = createAction('MAP_DETAILS_RECEIVED');
 
 const startCreateFeature = createAction('START_CREATE_FEATURE');
+const createFeatureSuccess = createAction('CREATE_FEATURE_SUCCESS');
+const createFeatureFailed = createAction('CREATE_FEATURE_FAILED');
 
+const startEditFeature = createAction('START_EDIT_FEATURE');
+const editFeatureSuccess = createAction('EDIT_FEATURE_SUCCESS');
+const editFeatureFailed = createAction('EDIT_FEATURE_FAILED');
 
 export const selectMap = (mapId) => (dispatch, getState) => {
     dispatch(mapSelected(mapId));
@@ -25,7 +30,7 @@ export const selectMap = (mapId) => (dispatch, getState) => {
 export const fetchMaps = () => (dispatch, getState) => {
     dispatch(startGetMapsList());
 
-    return fetch('http://localhost/maps/')
+    return fetch('http://127.0.0.1:8000/maps/')
         .then(r => r.json())
         .then(data => dispatch(mapsListReceived(data)));
 }
@@ -34,7 +39,7 @@ export const fetchMaps = () => (dispatch, getState) => {
 export const fetchMapDetails = (mapId) => (dispatch, getState) => {
     dispatch(startGetMapDetails(mapId));
 
-    return fetch(`http://localhost/maps/${mapId}`)
+    return fetch(`http://127.0.0.1:8000/maps/${mapId}/`)
         .then(r => r.json())
         .then(data => dispatch(mapDetailsReceived(data)))
 }
@@ -54,7 +59,7 @@ export const createFeature = (featureData) => (dispatch, getState) => {
 
     return new Promise((resolve, reject) => {
         request
-            .post('http://localhost/features/')
+            .post('http://127.0.0.1:8000/features/')
             .send(data)
             .end((err, res) => {
                 if (err){
@@ -63,5 +68,30 @@ export const createFeature = (featureData) => (dispatch, getState) => {
                     resolve(res);
                 }
             })
-    });
+    })
+        .then(r => JSON.parse(r.text))
+        .then(r => {
+            dispatch(createFeatureSuccess(r));
+        })
+        .catch(() => {
+            dispatch(createFeatureFailed());
+        })
+
+}
+
+
+export const moveFeature = newData => (dispatch, getState) => {
+    dispatch(startEditFeature(newData));
+    let state = getState();
+    let map = state.maps[state.selectedMap];
+    request
+        .patch(`http://127.0.0.1:8000/features/${newData.id}/?map=${map.id}`)
+        .send(newData)
+        .end((err, res) => {
+            if (err){
+                dispatch(editFeatureFailed());
+            } else {
+                dispatch(editFeatureSuccess());
+            }
+        });
 }

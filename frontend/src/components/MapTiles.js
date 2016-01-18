@@ -4,7 +4,7 @@ import Draw from 'leaflet-draw';
 import {Map, Rectangle, TileLayer} from 'react-leaflet';
 import {connect} from 'react-redux';
 
-import {createFeature} from '../actions';
+import {createFeature, moveFeature} from '../actions';
 
 const SS = L.extend({}, L.CRS, {
     projection: L.Projection.LonLat,
@@ -24,7 +24,7 @@ componentWillMount() {
 
 
 const elementFactory = {
-    1: function(map, feature){
+    1: function(map, feature, callbacks){
         var size = map.unproject([120, 120], 4);
         var data = feature.data;
         var lat = data.lat;
@@ -36,15 +36,11 @@ const elementFactory = {
 
         function onEdit(evt){
             var newCoords = evt.target.getBounds().getSouthWest();
-            // ElementActions.saveElement({
-            //     id: data.id,
-            //     kind: data.kind,
-            //     layer: data.layer,
-            //     payload: {
-            //             lat: newCoords.lat,
-            //             lng: newCoords.lng,
-            //     }
-            // })
+            console.log('ta', newCoords);
+            callbacks.moveFeature({
+                id: feature.id,
+                data: newCoords
+            });
         }
 
         function onClick(evt){
@@ -71,8 +67,6 @@ class MapComponent extends React.Component {
     }
 
     componentDidMount(){
-        // this._unsubscribe = ElementsStore.listen(this.onElementsChange.bind(this));
-        // ElementActions.getElements();
     }
 
     onLayersChange(layers){
@@ -92,8 +86,7 @@ class MapComponent extends React.Component {
     }
 
     mapClick(evt){
-        // ElementActions.mapClick(evt.latlng);
-        this.props.dispatch(createFeature(evt.latlng));
+        this.props.createFeature(evt.latlng);
     }
 
     render(){
@@ -108,12 +101,13 @@ class MapComponent extends React.Component {
             this.props.features.forEach(feature => {
                 var factory = elementFactory[feature.feature_type];
                 if (factory){
-                    feature.edit = true; //this.context.edit;
-                    elements.push(factory(map, feature))
+                    feature.data.edit = true; //this.context.edit;
+                    elements.push(factory(map, feature, {
+                        moveFeature: this.props.moveFeature
+                    }))
                 }
             })
         }
-        console.log('xd', this.props.features, elements)
 
         return <Map ref="map" className="fill" center={[0.08, 0.66]} zoom={4} crs={SS} onLeafletClick={this.mapClick.bind(this)}>
             <TileLayer
@@ -132,5 +126,10 @@ const mapStateToProps = state => {
     return {map, features}
 };
 
+const mapDispatchToProps = {
+    createFeature,
+    moveFeature
+};
 
-export default connect(mapStateToProps)(MapComponent);
+
+export default connect(mapStateToProps, mapDispatchToProps)(MapComponent);

@@ -18,8 +18,8 @@ class OnlyEditByEditID(BasePermission):
 
 class OnlyEditRelatedByEditID(BasePermission):
     def has_object_permission(self, request, view, obj):
-        used_id = view.kwargs['map_id']
-        if request.method not in SAFE_METHODS and obj.edit_id != used_id:
+        used_id = request.GET.get('map')
+        if request.method not in SAFE_METHODS and obj.map.edit_id != used_id:
             return False
         return True
 
