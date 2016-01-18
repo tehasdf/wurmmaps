@@ -1,5 +1,9 @@
 import {handleActions} from 'redux-actions';
 
+var _ctr = 0;
+const _makeFakeID = () => {
+    return 'fake-' + (_ctr++);
+}
 
 const rootReducer = handleActions({
     MAPS_LIST_RECEIVED: (state, action) => {
@@ -26,6 +30,28 @@ const rootReducer = handleActions({
         return {
             ...state,
             maps: {...state.maps, ...newMaps}
+        }
+    },
+    START_CREATE_FEATURE: (state, action) => {
+        let newFeature = {
+            feature_type: 1,
+            data: action.payload,
+            id: _makeFakeID()
+        };
+
+        let currentMapObj = state.maps[state.selectedMap];
+        let newFeatures = currentMapObj.features.concat(newFeature);
+        let newMapObj = {
+            ...currentMapObj,
+            features: newFeatures
+        };
+        let newMaps = {
+            ...state.maps,
+            [state.selectedMap]: newMapObj
+        };
+        return {
+            ...state,
+            maps: newMaps
         }
     }
 }, {maps: {}, selectedMap: null, selectedType: 1});

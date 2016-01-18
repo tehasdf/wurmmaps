@@ -41,7 +41,7 @@ export const fetchMapDetails = (mapId) => (dispatch, getState) => {
 
 
 export const createFeature = (featureData) => (dispatch, getState) => {
-    dispatch(startCreateFeature());
+    dispatch(startCreateFeature(featureData));
     let state = getState();
     let mapId = state.selectedMap;
     let featureType = state.selectedType;
