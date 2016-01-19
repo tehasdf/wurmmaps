@@ -56,8 +56,8 @@ class MapViewSet(viewsets.ModelViewSet):
         return obj
 
     def get_serializer_class(self):
-        if self.action == 'list':
-            return ShortMapSerializer
+        if self.action == 'list' or self.lookup_field not in self.kwargs:
+            return MapSerializer
 
         if self.kwargs[self.lookup_field] == self.get_object().edit_id:
             return MapEditSerializer
