@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {fetchMaps, selectMap} from '../actions';
+
+import {fetchMaps, selectMap} from '../actions/maps';
 import Map from './Map';
 import MapList from '../components/MapList';
 import MapDetails from '../components/MapDetails';

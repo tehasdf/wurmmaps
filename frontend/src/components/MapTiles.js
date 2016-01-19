@@ -4,7 +4,7 @@ import Draw from 'leaflet-draw';
 import {Map, Rectangle, TileLayer} from 'react-leaflet';
 import {connect} from 'react-redux';
 
-import {createFeature, moveFeature} from '../actions';
+import {createFeature, moveFeature} from '../actions/maps';
 
 const SS = L.extend({}, L.CRS, {
     projection: L.Projection.LonLat,

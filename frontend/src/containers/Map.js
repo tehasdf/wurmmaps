@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
 import MapTiles from '../components/MapTiles';
-import {fetchMapDetails} from '../actions';
+import {fetchMapDetails} from '../actions/maps';
 
 
 const mapStateToProps = (state, ownProps) => {

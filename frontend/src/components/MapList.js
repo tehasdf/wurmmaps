@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {fetchMaps, selectMap} from '../actions';
+import {fetchMaps, selectMap} from '../actions/maps';
 
 
 const mapStateToProps = state => {
