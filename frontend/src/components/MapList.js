@@ -5,7 +5,7 @@ import {fetchMaps, selectMap} from '../actions';
 
 const mapStateToProps = state => {
     return {
-        maps: state.maps
+        maps: state.maps.maps
     }
 }
 

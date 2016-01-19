@@ -58,32 +58,6 @@ const elementFactory = {
 }
 
 class MapComponent extends React.Component {
-    constructor(){
-        super();
-        this.state = {
-            elements: [],
-            layers: {}
-        }
-    }
-
-    componentDidMount(){
-    }
-
-    onLayersChange(layers){
-        this.setState({layers: layers.selected})
-    }
-
-    componentWillUnmount(){
-        this._unsubscribe();
-    }
-
-    onElementsChange(elems){
-        var e = [];
-        for (var i in elems){
-            e.push(elems[i])
-        }
-        this.setState({elements: e})
-    }
 
     mapClick(evt){
         this.props.createFeature(evt.latlng);
@@ -93,7 +67,6 @@ class MapComponent extends React.Component {
         if (!this.props.map || !this.props.features){
             return null;
         }
-        var selected = this.state.layers;
         var elements = [];
         if (this.refs.map){
             var map = this.refs.map.getLeafletElement();
@@ -120,8 +93,8 @@ class MapComponent extends React.Component {
 }
 
 const mapStateToProps = state => {
-    let map = state.maps[state.selectedMap];
-    let features = (map !== undefined) ? state.maps[state.selectedMap].features : [];
+    let map = state.maps.maps[state.maps.selectedMap];
+    let features = (map !== undefined) ? state.maps.maps[state.maps.selectedMap].features : [];
 
     return {map, features}
 };

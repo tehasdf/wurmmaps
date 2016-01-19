@@ -7,7 +7,7 @@ import {fetchMapDetails} from '../actions';
 
 const mapStateToProps = (state, ownProps) => {
     return {
-        map: state.maps[ownProps.mapId]
+        map: state.maps.maps[ownProps.mapId]
     }
 }
 

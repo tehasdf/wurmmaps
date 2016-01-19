@@ -3,11 +3,11 @@ import {connect} from 'react-redux';
 import {fetchMaps, selectMap} from '../actions';
 import Map from './Map';
 import MapList from '../components/MapList';
-
+import MapDetails from '../components/MapDetails';
 
 const mapStateToProps = state => {
     return {
-        selected: state.selectedMap
+        selected: state.maps.selectedMap
     }
 }
 
@@ -33,13 +33,19 @@ class App extends Component {
     }
 
     render(){
-        return <div className="fill">
-            {this.props.selected
-                ? <Map mapId={this.props.selected} />
-                : <MapList />}
+        return <div className="container-fluid fill nopadding">
+            <div className="row fill">
+                <div className="col-xs12 fill">
+                    {this.props.selected
+                        ? <Map mapId={this.props.selected} />
+                        : <MapList />}
+                </div>
+            </div>
+            <div className="floatbar">
+                {this.props.selected !== null ? <MapDetails /> : null}
+            </div>
         </div>
     }
 }
-
 
 export default connect(mapStateToProps)(App);

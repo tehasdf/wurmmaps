@@ -30,7 +30,7 @@ const _setCurrentFeatures = (state, features) => {
 };
 
 
-const rootReducer = handleActions({
+const mapsReducer = handleActions({
     MAPS_LIST_RECEIVED: (state, action) => {
         let byId = {};
         action.payload.forEach(map => {
@@ -104,4 +104,4 @@ const rootReducer = handleActions({
     }
 }, {maps: {}, selectedMap: null, selectedType: 1});
 
-export default rootReducer;
+export default mapsReducer;
