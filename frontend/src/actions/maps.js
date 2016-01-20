@@ -18,11 +18,13 @@ const startEditFeature = createAction('START_EDIT_FEATURE');
 const editFeatureSuccess = createAction('EDIT_FEATURE_SUCCESS');
 const editFeatureFailed = createAction('EDIT_FEATURE_FAILED');
 
+
 export const selectMap = (mapId) => (dispatch, getState) => {
     dispatch(mapSelected(mapId));
+    dispatch(fetchMapDetails(mapId));
+
     if (window && window.location){
         window.location.hash = `map=${mapId}`;
-
     }
 }
 
@@ -48,7 +50,7 @@ export const fetchMapDetails = (mapId) => (dispatch, getState) => {
 export const createFeature = (featureData) => (dispatch, getState) => {
     dispatch(startCreateFeature(featureData));
     let state = getState().maps;
-    let mapId = state.selectedMap;
+    let mapId = state.selectedMap.id;
     let featureType = state.selectedType;
 
     let data = {
@@ -82,7 +84,7 @@ export const createFeature = (featureData) => (dispatch, getState) => {
 export const moveFeature = newData => (dispatch, getState) => {
     dispatch(startEditFeature(newData));
     let state = getState();
-    let map = state.maps.maps[state.maps.selectedMap];
+    let map = state.maps.selectedMap;
     request
         .patch(`http://127.0.0.1:8000/features/${newData.id}/?map=${map.id}`)
         .send(newData)

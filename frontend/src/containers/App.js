@@ -8,7 +8,7 @@ import MapDetails from '../components/MapDetails';
 
 const mapStateToProps = state => {
     return {
-        selected: state.maps.selectedMap
+        map: state.maps.selectedMap
     }
 }
 
@@ -37,13 +37,13 @@ class App extends Component {
         return <div className="container-fluid fill nopadding">
             <div className="row fill">
                 <div className="col-xs12 fill">
-                    {this.props.selected
-                        ? <Map mapId={this.props.selected} />
+                    {this.props.map
+                        ? <Map map={this.props.map} />
                         : <MapList />}
                 </div>
             </div>
             <div className="floatbar">
-                {this.props.selected !== null ? <MapDetails /> : null}
+                {this.props.map ? <MapDetails /> : null}
             </div>
         </div>
     }

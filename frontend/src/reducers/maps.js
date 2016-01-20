@@ -11,20 +11,17 @@ const _hasFakeID = map => {
 
 
 const _getCurrentFeatures = state => {
-    return state.maps[state.selectedMap].features;
+    return state.selectedMap.features;
 }
 
 const _setCurrentFeatures = (state, features) => {
-    let currentMap = state.maps[state.selectedMap];
+    let currentMap = state.selectedMap;
 
     return {
         ...state,
-        maps: {
-            ...state.maps,
-            [state.selectedMap]: {
-                ...currentMap,
-                features
-            }
+        selectedMap: {
+            ...currentMap,
+            features
         }
     }
 };
@@ -43,20 +40,10 @@ const mapsReducer = handleActions({
         }
     },
 
-    MAP_SELECTED: (state, action) => {
+    MAP_DETAILS_RECEIVED: (state, action) => {
         return {
             ...state,
             selectedMap: action.payload
-        }
-    },
-
-    MAP_DETAILS_RECEIVED: (state, action) => {
-        let newMaps = {};
-        newMaps[action.payload.id] = action.payload;
-
-        return {
-            ...state,
-            maps: {...state.maps, ...newMaps}
         }
     },
 

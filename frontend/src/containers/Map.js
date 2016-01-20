@@ -4,23 +4,11 @@ import {connect} from 'react-redux';
 import MapTiles from '../components/MapTiles';
 import {fetchMapDetails} from '../actions/maps';
 
-
-const mapStateToProps = (state, ownProps) => {
-    return {
-        map: state.maps.maps[ownProps.mapId]
-    }
-}
-
 class Map extends Component {
-    componentDidMount(){
-        const {dispatch} = this.props;
-        dispatch(fetchMapDetails(this.props.mapId));
-    }
-
     render(){
-        return <MapTiles map={this.props.map} />
+        return <MapTiles />
     }
 }
 
 
-export default connect(mapStateToProps)(Map);
+export default connect(null, {fetchMapDetails})(Map);

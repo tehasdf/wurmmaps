@@ -22,8 +22,8 @@ componentWillMount() {
 }
 
 
-const createReveal = ({map, feature, editable, callbacks}) => {
-    let size = map.unproject([120, 120], 4);
+const createReveal = ({feature, editable, callbacks}) => {
+    let size = {lat: 0.029296875, lng: 0.029296875}; // map.unproject([120, 120], 4))
     let data = feature.data;
     let lat = data.lat;
     let lng = data.lng;
@@ -66,15 +66,13 @@ const _getElementFactory = featureType => {
 
 
 class MapComponent extends React.Component {
-
     mapClick(evt){
         this.props.createFeature(evt.latlng);
     }
 
-    makeFeature(map, feature){
+    makeFeature(feature){
         let factory = _getElementFactory(feature.feature_type);
         return factory({
-            map,
             feature,
             editable: this.props.canEdit,
             callbacks: {
@@ -84,18 +82,8 @@ class MapComponent extends React.Component {
     }
 
     render(){
-        if (!this.props.map || !this.props.features){
-            return null;
-        }
-
-        let elements = [];
-        if (this.refs.map){
-            let map = this.refs.map.getLeafletElement();
-            elements = this.props.features.map(f => this.makeFeature(map, f));
-        }
-
+        let elements = this.props.features.map(this.makeFeature.bind(this));
         return <Map
-            ref="map"
             className="fill"
             center={this.props.center}
             zoom={4}
@@ -113,8 +101,8 @@ class MapComponent extends React.Component {
 }
 
 const mapStateToProps = state => {
-    let map = state.maps.maps[state.maps.selectedMap];
-    let features = (map !== undefined) ? state.maps.maps[state.maps.selectedMap].features : [];
+    let map = state.maps.selectedMap;
+    let features = (map !== undefined) ? map.features : [];
 
     return {
         map,
