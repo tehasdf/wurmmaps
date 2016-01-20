@@ -1,121 +1,59 @@
 import React from 'react';
-import Reflux from 'reflux';
-
+import {connect} from 'react-redux';
 import {togglePanel} from '../actions/ui';
 
 
+const panelMapStateToProps = (state, ownProps) => ({
+    shown: state.ui.panels[ownProps.name]
+});
 
-export var UIActions = Reflux.createActions([
-    'togglePanel'
-]);
 
-export var UIStore = Reflux.createStore({
-    listenables: [UIActions],
-    init(){
-        this.state = {
-            toolbar: true,
-            selected: true,
-            layers: false,
-            details: true
-        }
-    },
+export const PanelBody = ({children}) => (
+    <div className="panel-body">
+        {children}
+    </div>
+);
 
-    getInitialState(){
-        return this.state
-    },
+const _PanelToggle = ({shown, name, togglePanel}) => {
+    let icon = shown ? 'glyphicon glyphicon-minus' : 'glyphicon glyphicon-plus';
+    return <a className="btn btn-default"
+        onClick={e => togglePanel(name)}
+    >
+        <span className={icon} />
+    </a>
+}
+const PanelToggle = connect(null, {togglePanel})(_PanelToggle);
 
-    onTogglePanel(which){
-        this.state[which] = !this.state[which];
-        this.trigger(this.state);
-    }
-})
 
-export class PanelBody extends React.Component {
-    constructor(){
-        super();
-        this.state = {shown: false};
-    }
+const PanelHeader = ({name, label, hasChildren, shown}) => {
+    let toggle = null;
 
-    uiStateChanged(state){
-        this.setState({shown: state[this.props.name]})
-    }
-
-    componentDidMount(){
-        UIStore.listen(this.uiStateChanged.bind(this));
-        this.uiStateChanged(UIStore.getInitialState())
-    }
-
-    render(){
-        if (!this.state.shown){
-            return null;
-        }
-        return <div className="panel-body">
-            {this.props.children}
+    if (hasChildren){
+        toggle = <div className="btn-group pull-right">
+            <PanelToggle shown={shown} name={name} />
         </div>
     }
-}
 
-class _PanelToggle extends React.Component {
-    constructor(){
-        super();
-        this.state = {shown: false};
-    }
-
-    uiStateChanged(state){
-        this.setState({shown: state[this.props.name]})
-    }
-
-    componentDidMount(){
-        UIStore.listen(this.uiStateChanged.bind(this));
-        this.uiStateChanged(UIStore.getInitialState())
-    }
-
-    toggle(){
-        UIActions.togglePanel(this.props.name)
-    }
-
-    render(){
-        var icon = this.state.shown ? 'glyphicon glyphicon-minus' : 'glyphicon glyphicon-plus';
-        return <a onClick={this.toggle.bind(this)} className="btn btn-default"><span className={icon}></span></a>
-    }
-}
-
-export const PanelToggle = connect(panelMapStateToProps, {togglePanel})(PanelToggle);
-
-class PanelHeader extends React.Component {
-    render(){
-        var toggle = null;
-        if (this.props.hasChildren){
-            toggle = <div className="btn-group pull-right">
-                <PanelToggle name={this.props.name} />
-            </div>
-        }
-        return <div className="panel-heading">
-        <span className="panel-title">{this.props.label}</span>
+    return <div className="panel-heading">
+        <span className="panel-title">{label}</span>
         {toggle}
         <div className="clearfix" />
-      </div>
-    }
+    </div>
 }
 
 
-
-const _Panel = ({shown, children}) => {
+const _Panel = props => {
     let body = null;
-    if (children && shown){
-        body = <PanelBody name={this.props.name}>{children}</PanelBody>
+    console.log('ta', props.shown);
+    if (props.children && props.shown){
+        body = <PanelBody name={props.name}>{props.children}</PanelBody>
     }
 
     return <div className="panel panel-default">
-        <PanelHeader hasChildren={!!body} {...this.props} />
+        <PanelHeader hasChildren={!!props.children} {...props} />
         {body}
     </div>
 
-}
-
-
-const panelMapStateToProps = (state, ownProps) => {
-    shown: state.ui.panels[ownProps.name]
 }
 
 export const Panel = connect(panelMapStateToProps)(_Panel);

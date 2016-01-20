@@ -13,7 +13,9 @@ const uiReducer = handleActions({
         }
     }
 }, {
-    panels: {}
+    panels: {
+        details: true
+    }
 });
 
 export default uiReducer;
