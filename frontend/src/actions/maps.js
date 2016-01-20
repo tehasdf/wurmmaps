@@ -76,7 +76,6 @@ export const createFeature = (featureData) => (dispatch, getState) => {
         .catch(() => {
             dispatch(createFeatureFailed());
         })
-
 }
 
 
