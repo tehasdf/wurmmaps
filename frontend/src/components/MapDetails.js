@@ -58,8 +58,8 @@ class EditableMapDetails extends React.Component {
 
 }
 
-const ViewMapDetails = props => {
-    return <div>bvc</div>
+const ViewMapDetails = ({map}) => {
+    return <Panel label={map.name} name="details" />
 }
 const MapDetails = ({map, editMap}) => {
     if (map.edit){
