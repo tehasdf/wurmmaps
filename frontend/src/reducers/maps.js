@@ -89,6 +89,7 @@ const mapsReducer = handleActions({
 
         return _setCurrentFeatures(state, newFeatures);
     }
+
 }, {maps: {}, selectedMap: null, selectedType: 1});
 
 export default mapsReducer;

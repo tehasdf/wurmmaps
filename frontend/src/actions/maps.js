@@ -18,6 +18,10 @@ const startEditFeature = createAction('START_EDIT_FEATURE');
 const editFeatureSuccess = createAction('EDIT_FEATURE_SUCCESS');
 const editFeatureFailed = createAction('EDIT_FEATURE_FAILED');
 
+const startEditMap = createAction('START_EDIT_MAP');
+const editMapSuccess = createAction('EDIT_MAP_SUCCESS');
+const editMapFailed = createAction('EDIT_MAP_FAILED');
+
 
 export const selectMap = (mapId) => (dispatch, getState) => {
     dispatch(mapSelected(mapId));
@@ -93,6 +97,26 @@ export const moveFeature = newData => (dispatch, getState) => {
                 dispatch(editFeatureFailed());
             } else {
                 dispatch(editFeatureSuccess());
+            }
+        });
+}
+
+
+export const editMap = newData => (dispatch, getState) => {
+    dispatch(startEditMap(newData));
+
+    let state = getState();
+    let map = state.maps.selectedMap;
+
+    request
+        .patch(`http://127.0.0.1:8000/maps/${map.id}/`)
+        .send(newData)
+        .end((err, res) => {
+            if (err){
+                dispatch(editMapFailed());
+            } else {
+                dispatch(mapDetailsReceived(JSON.parse(res.text)));
+                dispatch(editMapSuccess());
             }
         });
 }

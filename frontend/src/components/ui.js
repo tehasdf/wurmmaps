@@ -44,7 +44,6 @@ const PanelHeader = ({name, label, hasChildren, shown}) => {
 
 const _Panel = props => {
     let body = null;
-    console.log('ta', props.shown);
     if (props.children && props.shown){
         body = <PanelBody name={props.name}>{props.children}</PanelBody>
     }

@@ -43,7 +43,7 @@ class App extends Component {
                 </div>
             </div>
             <div className="floatbar">
-                {this.props.map ? <MapDetails /> : null}
+                {this.props.map ? <MapDetails map={this.props.map} /> : null}
             </div>
         </div>
     }
