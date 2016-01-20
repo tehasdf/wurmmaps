@@ -22,7 +22,7 @@ componentWillMount() {
 }
 
 
-const createReveal = (map, feature, callbacks) => {
+const createReveal = ({map, feature, editable, callbacks}) => {
     let size = map.unproject([120, 120], 4);
     let data = feature.data;
     let lat = data.lat;
@@ -48,7 +48,7 @@ const createReveal = (map, feature, callbacks) => {
     return <DraggableOnlyRectangle
         key={feature.id}
         bounds={coords}
-        editable={data.edit}
+        editable={editable}
         onLeafletEdit={onEdit}
         onLeafletClick={onClick} />;
 }
@@ -71,21 +71,27 @@ class MapComponent extends React.Component {
         this.props.createFeature(evt.latlng);
     }
 
+    makeFeature(map, feature){
+        let factory = _getElementFactory(feature.feature_type);
+        return factory({
+            map,
+            feature,
+            editable: this.props.canEdit,
+            callbacks: {
+                moveFeature: this.props.moveFeature
+            }
+        });
+    }
+
     render(){
         if (!this.props.map || !this.props.features){
             return null;
         }
-        var elements = [];
-        if (this.refs.map){
-            var map = this.refs.map.getLeafletElement();
 
-            this.props.features.forEach(feature => {
-                let factory = _getElementFactory(feature.feature_type);
-                feature.data.edit = true; //this.context.edit;
-                elements.push(factory(map, feature, {
-                    moveFeature: this.props.moveFeature
-                }));
-            })
+        let elements = [];
+        if (this.refs.map){
+            let map = this.refs.map.getLeafletElement();
+            elements = this.props.features.map(f => this.makeFeature(map, f));
         }
 
         return <Map
@@ -114,7 +120,8 @@ const mapStateToProps = state => {
         map,
         features,
         center: [0.08, 0.66],
-        mapname: 'independence'
+        mapname: 'independence',
+        canEdit: true
     }
 };
 
