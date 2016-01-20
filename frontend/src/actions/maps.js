@@ -47,7 +47,7 @@ export const fetchMapDetails = (mapId) => (dispatch, getState) => {
 
 export const createFeature = (featureData) => (dispatch, getState) => {
     dispatch(startCreateFeature(featureData));
-    let state = getState();
+    let state = getState().maps;
     let mapId = state.selectedMap;
     let featureType = state.selectedType;
 
@@ -82,7 +82,7 @@ export const createFeature = (featureData) => (dispatch, getState) => {
 export const moveFeature = newData => (dispatch, getState) => {
     dispatch(startEditFeature(newData));
     let state = getState();
-    let map = state.maps[state.selectedMap];
+    let map = state.maps.maps[state.maps.selectedMap];
     request
         .patch(`http://127.0.0.1:8000/features/${newData.id}/?map=${map.id}`)
         .send(newData)
