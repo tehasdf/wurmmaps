@@ -6,11 +6,11 @@ import {connect} from 'react-redux';
 
 import {createFeature, moveFeature} from '../actions/maps';
 
+
 const SS = L.extend({}, L.CRS, {
     projection: L.Projection.LonLat,
     transformation: new L.Transformation(1, 0, 1, 0)
 });
-
 
 
 
@@ -22,40 +22,48 @@ componentWillMount() {
 }
 
 
+const createReveal = (map, feature, callbacks) => {
+    let size = map.unproject([120, 120], 4);
+    let data = feature.data;
+    let lat = data.lat;
+    let lng = data.lng;
+    let coords = L.latLngBounds(
+        L.latLng({lat: lat, lng: lng}),
+        L.latLng({lat: lat + size.lat, lng: lng + size.lng})
+    );
 
-const elementFactory = {
-    1: function(map, feature, callbacks){
-        var size = map.unproject([120, 120], 4);
-        var data = feature.data;
-        var lat = data.lat;
-        var lng = data.lng;
-        var coords = L.latLngBounds(
-            L.latLng({lat: lat, lng: lng}),
-            L.latLng({lat: lat + size.lat, lng: lng + size.lng})
-        );
+    let onEdit = evt => {
+        let newCoords = evt.target.getBounds().getSouthWest();
 
-        function onEdit(evt){
-            var newCoords = evt.target.getBounds().getSouthWest();
-            console.log('ta', newCoords);
-            callbacks.moveFeature({
-                id: feature.id,
-                data: newCoords
-            });
-        }
+        callbacks.moveFeature({
+            id: feature.id,
+            data: newCoords
+        });
+    }
 
-        function onClick(evt){
-            ElementActions.select(data);
-        }
+    let onClick = evt => {
+        ElementActions.select(data);
+    }
+
+    return <DraggableOnlyRectangle
+        key={feature.id}
+        bounds={coords}
+        editable={data.edit}
+        onLeafletEdit={onEdit}
+        onLeafletClick={onClick} />;
+}
 
 
-        return <DraggableOnlyRectangle
-            key={feature.id}
-            bounds={coords}
-            editable={data.edit}
-            onLeafletEdit={onEdit}
-            onLeafletClick={onClick} />;
+
+const _getElementFactory = featureType => {
+    switch (featureType) {
+        case 1:
+            return createReveal;
+        default:
+            throw new Error(`_getElementFactory: unknown featureType ${featureType}`);
     }
 }
+
 
 class MapComponent extends React.Component {
 
@@ -72,20 +80,26 @@ class MapComponent extends React.Component {
             var map = this.refs.map.getLeafletElement();
 
             this.props.features.forEach(feature => {
-                var factory = elementFactory[feature.feature_type];
-                if (factory){
-                    feature.data.edit = true; //this.context.edit;
-                    elements.push(factory(map, feature, {
-                        moveFeature: this.props.moveFeature
-                    }))
-                }
+                let factory = _getElementFactory(feature.feature_type);
+                feature.data.edit = true; //this.context.edit;
+                elements.push(factory(map, feature, {
+                    moveFeature: this.props.moveFeature
+                }));
             })
         }
 
-        return <Map ref="map" className="fill" center={[0.08, 0.66]} zoom={4} crs={SS} onLeafletClick={this.mapClick.bind(this)}>
+        return <Map
+            ref="map"
+            className="fill"
+            center={this.props.center}
+            zoom={4}
+            crs={SS}
+            onLeafletClick={this.mapClick.bind(this)}
+        >
             <TileLayer
-                url='http://localhost/tiles/independence/{z}/{x}/{y}.png'
-                tms={true} noWrap={true}
+                url={`http://localhost/tiles/${this.props.mapname}/{z}/{x}/{y}.png`}
+                tms={true}
+                noWrap={true}
             />
             {elements}
         </Map>
@@ -96,7 +110,12 @@ const mapStateToProps = state => {
     let map = state.maps.maps[state.maps.selectedMap];
     let features = (map !== undefined) ? state.maps.maps[state.maps.selectedMap].features : [];
 
-    return {map, features}
+    return {
+        map,
+        features,
+        center: [0.08, 0.66],
+        mapname: 'independence'
+    }
 };
 
 const mapDispatchToProps = {
