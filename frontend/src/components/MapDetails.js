@@ -9,7 +9,8 @@ class EditableMapDetails extends React.Component {
     save(evt){
         evt.preventDefault();
         this.props.editMap({
-            name: this.refs.nameInput.value
+            name: this.refs.nameInput.value,
+            is_public: this.refs.isPublic.checked
         });
     }
 
@@ -26,6 +27,17 @@ class EditableMapDetails extends React.Component {
                             className="form-control"
                             type="text"
                             defaultValue={map.name}
+                        />
+                    </div>
+                </div>
+
+                <div className="form-group">
+                    <div className="col-sm-12">
+                        <label htmlFor="name-input">Show on public list?</label>
+                        <input
+                            ref="isPublic"
+                            type="checkbox"
+                            defaultChecked={map.is_public}
                         />
                     </div>
                 </div>
