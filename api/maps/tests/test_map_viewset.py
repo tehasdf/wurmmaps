@@ -56,3 +56,5 @@ class TestCreating(TestCase):
 
         self.assertIn('edit_id', response.data)
         self.assertEqual(response.data['edit_id'], response.data['id'])
+
+        self.assertEqual(Map.objects.count(), 1)

@@ -40,7 +40,7 @@ class MapSerializer(serializers.ModelSerializer):
         if not 'view_id' in validated_data:
             validated_data['view_id'] = uuid.uuid4().hex
 
-        return Map(**validated_data)
+        return super(MapSerializer, self).create(validated_data)
 
 
 class MapViewSerializer(MapSerializer):
