@@ -1,21 +1,7 @@
+import uuid
+
 from rest_framework import serializers
 from .models import Map, MapFeature
-
-
-
-class MapSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Map
-        exclude = ['id', 'edit_id', 'view_id', 'owner']
-
-    id = serializers.SerializerMethodField()
-
-    def get_id(self, obj):
-        user = self.context['request'].user
-        if user == obj.owner or user.is_superuser:
-            return obj.edit_id
-        else:
-            return obj.view_id
 
 
 class MapFeatureSerializer(serializers.ModelSerializer):
@@ -33,6 +19,30 @@ class MapFeatureSerializer(serializers.ModelSerializer):
         raise serializers.ValidationError('Incorrect map id')
 
 
+class MapSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Map
+        exclude = ['id', 'edit_id', 'view_id', 'owner']
+
+    id = serializers.SerializerMethodField()
+
+    def get_id(self, obj):
+        user = self.context['request'].user
+        if user == obj.owner or user.is_superuser:
+            return obj.edit_id
+        else:
+            return obj.view_id
+
+    def create(self, validated_data):
+        if not 'edit_id' in validated_data:
+            validated_data['edit_id'] = uuid.uuid4().hex
+
+        if not 'view_id' in validated_data:
+            validated_data['view_id'] = uuid.uuid4().hex
+
+        return Map(**validated_data)
+
+
 class MapViewSerializer(MapSerializer):
     features = MapFeatureSerializer(many=True, read_only=True)
     edit = serializers.SerializerMethodField()
@@ -40,11 +50,20 @@ class MapViewSerializer(MapSerializer):
     def get_edit(self, obj):
         return False
 
+    def get_id(self, obj):
+        return obj.view_id
+
 
 class MapEditSerializer(MapViewSerializer):
     class Meta:
         model = Map
         exclude = ['id']
+
+    edit_id = serializers.ReadOnlyField()
+    view_id = serializers.ReadOnlyField()
+
+    def get_id(self, obj):
+        return obj.edit_id
 
     def get_edit(self, obj):
         return True

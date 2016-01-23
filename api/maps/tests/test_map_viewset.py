@@ -22,7 +22,7 @@ class TestMapRetrieving(TestCase):
         self.assertEqual(response.data['name'], 'the map')
 
 
-class TestWriting(TestCase):
+class TestUpdating(TestCase):
     def setUp(self):
         self.obj = Map(name='the map', edit_id='edit id', view_id='view id')
         self.obj.save()
@@ -38,3 +38,12 @@ class TestWriting(TestCase):
             json.dumps({'name': 'foobar'}), content_type='application/json')
         self.assertEqual(response.status_code, 403)
 
+
+class TestCreating(TestCase):
+    def test_creates_with_edit_id(self):
+        response = self.client.post(reverse('maps-list'), {'name': 'foobar'})
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.data['name'], 'foobar')
+
+        self.assertIn('edit_id', response.data)
+        self.assertEqual(response.data['edit_id'], response.data['id'])
