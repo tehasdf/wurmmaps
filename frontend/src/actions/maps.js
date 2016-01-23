@@ -131,7 +131,12 @@ export const createMap = data => (dispatch, getState) => {
         .post(`http://127.0.0.1:8000/maps/`)
         .send({name: 'new map'})
         .end((err, res) => {
-            console.log('r', err, res);
-        })
+            if (err){
+                alert('Cannot create a new map?');
+            } else {
+                let data = JSON.parse(res.text);
+                dispatch(selectMap(data.id));
+            }
+        });
 
 }

@@ -18,7 +18,7 @@ const MapListItem = props => (
 class MapList extends Component {
 
     componentDidMount(){
-        fetchMaps();
+        this.props.fetchMaps();
     }
 
     mapSelect(map){
