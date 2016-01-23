@@ -20,6 +20,7 @@ class Map(models.Model):
     description = models.TextField(blank=True)
 
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, null=True)
+    is_public = models.BooleanField(default=False)
 
 
 class MapFeature(models.Model):

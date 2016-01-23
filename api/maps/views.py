@@ -27,7 +27,7 @@ class OnlyEditRelatedByEditID(BasePermission):
 class MapViewSet(viewsets.ModelViewSet):
     lookup_field = 'id'
 
-    queryset = Map.objects.all()
+    queryset = Map.objects.filter(is_public=True)
     serializer_class = MapSerializer
     permission_classes = [OnlyEditByEditID]
 
