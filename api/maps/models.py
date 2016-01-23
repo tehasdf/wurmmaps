@@ -17,7 +17,7 @@ class Map(models.Model):
     view_id = models.TextField(max_length=32)
 
     name = models.TextField()
-    description = models.TextField()
+    description = models.TextField(blank=True)
 
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, null=True)
 

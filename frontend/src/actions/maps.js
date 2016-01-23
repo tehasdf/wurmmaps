@@ -22,6 +22,8 @@ const startEditMap = createAction('START_EDIT_MAP');
 const editMapSuccess = createAction('EDIT_MAP_SUCCESS');
 const editMapFailed = createAction('EDIT_MAP_FAILED');
 
+const startCreateMap = createAction('START_CREATE_MAP');
+
 
 export const selectMap = (mapId) => (dispatch, getState) => {
     dispatch(mapSelected(mapId));
@@ -119,4 +121,17 @@ export const editMap = newData => (dispatch, getState) => {
                 dispatch(editMapSuccess());
             }
         });
+}
+
+
+export const createMap = data => (dispatch, getState) => {
+    dispatch(startCreateMap(data));
+
+    request
+        .post(`http://127.0.0.1:8000/maps/`)
+        .send({name: 'new map'})
+        .end((err, res) => {
+            console.log('r', err, res);
+        })
+
 }

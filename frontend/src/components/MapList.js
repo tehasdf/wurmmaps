@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {fetchMaps, selectMap} from '../actions/maps';
+import {fetchMaps, selectMap, createMap} from '../actions/maps';
 
 
 const mapStateToProps = state => {
@@ -18,12 +18,15 @@ const MapListItem = props => (
 class MapList extends Component {
 
     componentDidMount(){
-        const {dispatch} = this.props;
-        dispatch(fetchMaps());
+        fetchMaps();
     }
 
     mapSelect(map){
-        this.props.dispatch(selectMap(`${map.id}`));
+        this.props.selectMap(`${map.id}`);
+    }
+
+    create(){
+        this.props.createMap();
     }
 
     render(){
@@ -32,21 +35,27 @@ class MapList extends Component {
             return null;
         }
         let {maps} = this.props;
-        if (Object.keys(maps).length === 0){
-            return <div>empty</div>;
+        let mapslist = <div>empty</div>;
+
+        if (Object.keys(maps).length > 0){
+            mapslist = <ul>
+                {Object.keys(maps).map(k => {
+                    let map = maps[k];
+                    return <MapListItem
+                        key={map.id}
+                        name={map.name}
+                        clicked={e => self.mapSelect(map)}
+                    />
+                })}
+            </ul>
         }
-        return <ul>
-            {Object.keys(maps).map(k => {
-                let map = maps[k];
-                return <MapListItem
-                    key={map.id}
-                    name={map.name}
-                    clicked={e => self.mapSelect(map)}
-                />
-            })}
-        </ul>
+
+        return <div>
+            <button onClick={this.create.bind(this)}>Create new</button>
+            {mapslist}
+        </div>
     }
 }
 
 
-export default connect(mapStateToProps)(MapList);
+export default connect(mapStateToProps, {createMap, selectMap, fetchMaps})(MapList);
