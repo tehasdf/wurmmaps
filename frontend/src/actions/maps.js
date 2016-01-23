@@ -151,16 +151,18 @@ export const createMap = data => (dispatch, getState) => {
 export const deleteFeature = feature => (dispatch, getState) => {
     dispatch(startDeleteFeature(feature));
 
+    let state = getState();
+    let map = state.maps.selectedMap;
+
     request
-        .delete(`http://127.0.0.1:8000/features/${feature.id}/`)
+        .delete(`http://127.0.0.1:8000/features/${feature.id}/?map=${map.id}`)
         .send()
         .end((err, res) => {
             if (err){
                 console.error(err);
-                dispatch(deleteFeatureFailed());
+                dispatch(deleteFeatureFailed(feature));
             } else {
-                let data = JSON.parse(res.text);
-                dispatch(deleteFeatureSuccess(data));
+                dispatch(deleteFeatureSuccess(feature));
             }
         });
 }

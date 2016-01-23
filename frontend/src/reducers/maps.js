@@ -95,6 +95,13 @@ const mapsReducer = handleActions({
             ...state,
             selectedFeature: action.payload
         }
+    },
+
+    START_DELETE_FEATURE: (state, action) => {
+        let newFeatures = _getCurrentFeatures(state)
+            .filter(f => f.id !== action.payload.id);
+
+        return _setCurrentFeatures(state, newFeatures);
     }
 
 }, {maps: {}, selectedMap: null, selectedType: 1, selectedFeature: null});
