@@ -4,7 +4,7 @@ import Draw from 'leaflet-draw';
 import {Map, Rectangle, TileLayer} from 'react-leaflet';
 import {connect} from 'react-redux';
 
-import {createFeature, moveFeature} from '../actions/maps';
+import {createFeature, moveFeature, selectFeature} from '../actions/maps';
 
 
 const SS = L.extend({}, L.CRS, {
@@ -42,7 +42,7 @@ const createReveal = ({feature, editable, callbacks}) => {
     }
 
     let onClick = evt => {
-        ElementActions.select(data);
+        callbacks.selectFeature(feature);
     }
 
     return <DraggableOnlyRectangle
@@ -76,7 +76,8 @@ class MapComponent extends React.Component {
             feature,
             editable: this.props.canEdit,
             callbacks: {
-                moveFeature: this.props.moveFeature
+                moveFeature: this.props.moveFeature,
+                selectFeature: this.props.selectFeature
             }
         });
     }
@@ -115,7 +116,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = {
     createFeature,
-    moveFeature
+    moveFeature,
+    selectFeature
 };
 
 

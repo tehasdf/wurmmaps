@@ -24,6 +24,12 @@ const editMapFailed = createAction('EDIT_MAP_FAILED');
 
 const startCreateMap = createAction('START_CREATE_MAP');
 
+const startDeleteFeature = createAction('START_DELETE_FEATURE');
+const deleteFeatureSuccess = createAction('DELETE_FEATURE_SUCCESS');
+const deleteFeatureFailed = createAction('DELETE_FEATURE_FAILED');
+
+export const featureSelected = createAction('FEATURE_SELECTED');
+
 
 export const selectMap = (mapId) => (dispatch, getState) => {
     dispatch(mapSelected(mapId));
@@ -139,4 +145,27 @@ export const createMap = data => (dispatch, getState) => {
             }
         });
 
+}
+
+
+export const deleteFeature = feature => (dispatch, getState) => {
+    dispatch(startDeleteFeature(feature));
+
+    request
+        .delete(`http://127.0.0.1:8000/features/${feature.id}/`)
+        .send()
+        .end((err, res) => {
+            if (err){
+                console.error(err);
+                dispatch(deleteFeatureFailed());
+            } else {
+                let data = JSON.parse(res.text);
+                dispatch(deleteFeatureSuccess(data));
+            }
+        });
+}
+
+
+export const selectFeature = feature => (dispatch, getState) => {
+    dispatch(featureSelected(feature));
 }

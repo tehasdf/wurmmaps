@@ -14,7 +14,8 @@ const uiReducer = handleActions({
     }
 }, {
     panels: {
-        details: true
+        details: true,
+        selected: true
     }
 });
 

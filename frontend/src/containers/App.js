@@ -5,6 +5,7 @@ import {fetchMaps, selectMap} from '../actions/maps';
 import Map from './Map';
 import MapList from '../components/MapList';
 import MapDetails from '../components/MapDetails';
+import SelectedElement from '../components/SelectedElement';
 
 const mapStateToProps = state => {
     return {
@@ -34,6 +35,13 @@ class App extends Component {
     }
 
     render(){
+        let detailComponents = null;
+        if (this.props.map){
+            detailComponents = [
+                <MapDetails key='details' map={this.props.map} />,
+                <SelectedElement key='selected' />
+            ]
+        }
         return <div className="container-fluid fill nopadding">
             <div className="row fill">
                 <div className="col-xs12 fill">
@@ -43,7 +51,7 @@ class App extends Component {
                 </div>
             </div>
             <div className="floatbar">
-                {this.props.map ? <MapDetails map={this.props.map} /> : null}
+                {detailComponents}
             </div>
         </div>
     }
