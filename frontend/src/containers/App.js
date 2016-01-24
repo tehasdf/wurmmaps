@@ -40,9 +40,11 @@ class App extends Component {
         if (this.props.map){
             detailComponents = [
                 <MapDetails key='details' map={this.props.map} />,
-                <Toolbar key='toolbar' />,
-                <SelectedElement key='selected' />
             ]
+            if (this.props.map.edit){
+                detailComponents.push(<Toolbar key='toolbar' />);
+                detailComponents.push(<SelectedElement key='selected' />);
+            }
         }
         return <div className="container-fluid fill nopadding">
             <div className="row fill">
