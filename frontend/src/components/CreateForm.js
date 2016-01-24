@@ -8,7 +8,8 @@ class CreateForm extends Component {
     constructor(props){
         super(props);
         this.state = {
-            name: 'new map name'
+            name: 'new map name',
+            mapname: 'independence'
         };
     }
 
@@ -19,6 +20,13 @@ class CreateForm extends Component {
     render(){
         return <div>
             <h3>Create a new map</h3>
+            <select
+                onChange={e => this.setState({mapname: e.target.value})}
+                value={this.state.mapname}
+            >
+                <option value="independence">independence</option>
+                <option value="celebration">celebration</option>
+            </select>
             <input
                 type='text'
                 value={this.state.name}

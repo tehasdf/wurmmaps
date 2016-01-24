@@ -110,7 +110,7 @@ const mapStateToProps = state => {
         map,
         features,
         center: [0.08, 0.66],
-        mapname: 'independence',
+        mapname: map.mapname,
         canEdit: map.edit
     }
 };

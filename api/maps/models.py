@@ -19,6 +19,8 @@ class Map(models.Model):
     name = models.TextField()
     description = models.TextField(blank=True)
 
+    mapname = models.TextField(max_length=100)
+
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, null=True)
     is_public = models.BooleanField(default=False)
 
