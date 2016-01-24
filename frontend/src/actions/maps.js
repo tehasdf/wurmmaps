@@ -36,9 +36,7 @@ export const featureSelected = createAction('FEATURE_SELECTED');
 
 export const selectMap = (mapId) => (dispatch, getState) => {
     dispatch(mapSelected(mapId));
-    dispatch(fetchMapDetails(mapId));
-
-    dispatch(routeActions.push(`/${mapId}`));
+    dispatch(routeActions.push(`${mapId}`));
 }
 
 
