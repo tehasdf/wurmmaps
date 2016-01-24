@@ -93,7 +93,7 @@ class MapComponent extends React.Component {
             onLeafletClick={this.mapClick.bind(this)}
         >
             <TileLayer
-                url={getURL(`static/tiles/${this.props.mapname}/{z}/{x}/{y}.png`)}
+                url={getURL(`/static/tiles/${this.props.mapname}/{z}/{x}/{y}.png`)}
                 tms={true}
                 noWrap={true}
             />

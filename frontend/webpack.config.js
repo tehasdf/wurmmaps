@@ -15,10 +15,7 @@ module.exports = {
     devServer: {
         contentBase: './dist',
         proxy: {
-            '/maps/*': {
-                target: 'http://127.0.0.1:8000/'
-            },
-            '/features/*': {
+            '/api/*': {
                 target: 'http://127.0.0.1:8000/'
             },
             '/static/tiles/*': {
