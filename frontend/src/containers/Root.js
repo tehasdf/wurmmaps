@@ -17,7 +17,7 @@ const Root = props => (
         <Router history={browserHistory}>
             <Route path={window.BASE_URL} component={App}>
                 <IndexRoute component={MapList} />
-                <Route path="/:mapId" component={Map} />
+                <Route path=":mapId" component={Map} />
             </Route>
         </Router>
     </Provider>
