@@ -51,8 +51,16 @@ class MapList extends Component {
         }
 
         return <div>
-            <button onClick={this.create.bind(this)}>Create new</button>
-            {mapslist}
+            <div className="row">
+                <div className="col-lg-6">
+                    <h3>Publicly viewable maps</h3>
+                    {mapslist}
+                </div>
+                <div className="col-lg-6">
+                    <h3>Create a new map</h3>
+                    <button onClick={this.create.bind(this)}>Create</button>
+                </div>
+            </div>
         </div>
     }
 }

@@ -44,7 +44,7 @@ class App extends Component {
         }
         return <div className="container-fluid fill nopadding">
             <div className="row fill">
-                <div className="col-xs12 fill">
+                <div className="col-lg-12 fill">
                     {this.props.map
                         ? <Map map={this.props.map} />
                         : <MapList />}
