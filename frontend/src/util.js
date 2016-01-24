@@ -6,7 +6,7 @@ const getBaseURL = () => {
 export const getURL = path => {
     return [
         getBaseURL(),
-        path[0] === '/' ? '' : '/api/',
+        path[0] === '/' ? '' : window.API_ROOT,
         path
     ].join('');
 }
