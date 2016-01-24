@@ -4,6 +4,7 @@ import Draw from 'leaflet-draw';
 import {Map, Rectangle, TileLayer} from 'react-leaflet';
 import {connect} from 'react-redux';
 
+import {getURL} from '../util';
 import {mapClick, moveFeature, selectFeature} from '../actions/maps';
 
 
@@ -92,7 +93,7 @@ class MapComponent extends React.Component {
             onLeafletClick={this.mapClick.bind(this)}
         >
             <TileLayer
-                url={`http://localhost/tiles/${this.props.mapname}/{z}/{x}/{y}.png`}
+                url={getURL(`tiles/${this.props.mapname}/{z}/{x}/{y}.png`)}
                 tms={true}
                 noWrap={true}
             />

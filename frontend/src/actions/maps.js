@@ -148,7 +148,7 @@ export const createMap = data => (dispatch, getState) => {
 
     request
         .post(getURL('maps/'))
-        .send({name: 'new map'})
+        .send(data)
         .end((err, res) => {
             if (err){
                 alert('Cannot create a new map?');

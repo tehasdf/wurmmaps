@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {fetchMaps, selectMap, createMap} from '../actions/maps';
 
+import {fetchMaps, selectMap} from '../actions/maps';
+import CreateForm from '../components/CreateForm';
 
 const mapStateToProps = state => {
     return {
@@ -23,10 +24,6 @@ class MapList extends Component {
 
     mapSelect(map){
         this.props.selectMap(`${map.id}`);
-    }
-
-    create(){
-        this.props.createMap();
     }
 
     render(){
@@ -57,8 +54,7 @@ class MapList extends Component {
                     {mapslist}
                 </div>
                 <div className="col-lg-6">
-                    <h3>Create a new map</h3>
-                    <button onClick={this.create.bind(this)}>Create</button>
+                    <CreateForm />
                 </div>
             </div>
         </div>
@@ -66,4 +62,4 @@ class MapList extends Component {
 }
 
 
-export default connect(mapStateToProps, {createMap, selectMap, fetchMaps})(MapList);
+export default connect(mapStateToProps, {selectMap, fetchMaps})(MapList);
