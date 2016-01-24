@@ -1,6 +1,8 @@
 import fetch from 'isomorphic-fetch';
 import {createAction} from 'redux-actions';
 import request from 'superagent';
+import {getURL} from '../util';
+
 
 const startGetMapsList = createAction('START_MAPS_LIST');
 const mapsListReceived = createAction('MAPS_LIST_RECEIVED');
@@ -44,7 +46,7 @@ export const selectMap = (mapId) => (dispatch, getState) => {
 export const fetchMaps = () => (dispatch, getState) => {
     dispatch(startGetMapsList());
 
-    return fetch('http://127.0.0.1:8000/maps/')
+    return fetch(getURL('maps/'))
         .then(r => r.json())
         .then(data => dispatch(mapsListReceived(data)));
 }
@@ -53,7 +55,7 @@ export const fetchMaps = () => (dispatch, getState) => {
 export const fetchMapDetails = (mapId) => (dispatch, getState) => {
     dispatch(startGetMapDetails(mapId));
 
-    return fetch(`http://127.0.0.1:8000/maps/${mapId}/`)
+    return fetch(getURL(`maps/${mapId}/`))
         .then(r => r.json())
         .then(data => dispatch(mapDetailsReceived(data)))
 }
@@ -73,7 +75,7 @@ export const createFeature = (featureData) => (dispatch, getState) => {
 
     return new Promise((resolve, reject) => {
         request
-            .post('http://127.0.0.1:8000/features/')
+            .post(getURL('features/'))
             .send(data)
             .end((err, res) => {
                 if (err){
@@ -98,7 +100,7 @@ export const moveFeature = newData => (dispatch, getState) => {
     let state = getState();
     let map = state.maps.selectedMap;
     request
-        .patch(`http://127.0.0.1:8000/features/${newData.id}/?map=${map.id}`)
+        .patch(getURL(`features/${newData.id}/?map=${map.id}`))
         .send(newData)
         .end((err, res) => {
             if (err){
@@ -117,7 +119,7 @@ export const editMap = newData => (dispatch, getState) => {
     let map = state.maps.selectedMap;
 
     request
-        .patch(`http://127.0.0.1:8000/maps/${map.id}/`)
+        .patch(getURL(`maps/${map.id}/`))
         .send(newData)
         .end((err, res) => {
             if (err){
@@ -134,7 +136,7 @@ export const createMap = data => (dispatch, getState) => {
     dispatch(startCreateMap(data));
 
     request
-        .post(`http://127.0.0.1:8000/maps/`)
+        .post(getURL('maps/'))
         .send({name: 'new map'})
         .end((err, res) => {
             if (err){
@@ -155,7 +157,7 @@ export const deleteFeature = feature => (dispatch, getState) => {
     let map = state.maps.selectedMap;
 
     request
-        .delete(`http://127.0.0.1:8000/features/${feature.id}/?map=${map.id}`)
+        .delete(getURL(`features/${feature.id}/?map=${map.id}`))
         .send()
         .end((err, res) => {
             if (err){

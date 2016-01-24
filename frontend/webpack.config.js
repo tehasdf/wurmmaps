@@ -13,6 +13,14 @@ module.exports = {
         ]
     },
     devServer: {
-        contentBase: './dist'
+        contentBase: './dist',
+        proxy: {
+            '/maps/*': {
+                target: 'http://127.0.0.1:8000/'
+            },
+            '/features/*': {
+                target: 'http://127.0.0.1:8000/'
+            }
+        }
     }
 };
