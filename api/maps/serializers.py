@@ -13,6 +13,7 @@ class MapFeatureSerializer(serializers.ModelSerializer):
 
 
     def validate_map(self, value):
+        """Only allow adding features to a map with the edit id"""
         map_obj = Map.objects.by_edit_view_id(value).get()
         if map_obj.edit_id == value:
             return map_obj
@@ -20,6 +21,8 @@ class MapFeatureSerializer(serializers.ModelSerializer):
 
 
 class MapSerializer(serializers.ModelSerializer):
+    """Simplest/shortened map serializer, used for the list view.
+    """
     class Meta:
         model = Map
         exclude = ['id', 'edit_id', 'view_id', 'owner']
@@ -27,6 +30,7 @@ class MapSerializer(serializers.ModelSerializer):
     id = serializers.SerializerMethodField()
 
     def get_id(self, obj):
+        # users aren't used yet, maybe in the future
         user = self.context['request'].user
         if user == obj.owner or user.is_superuser:
             return obj.edit_id
@@ -44,6 +48,8 @@ class MapSerializer(serializers.ModelSerializer):
 
 
 class MapViewSerializer(MapSerializer):
+    """MapSerializer with the features embedded"""
+
     features = MapFeatureSerializer(many=True, read_only=True)
     edit = serializers.SerializerMethodField()
 
@@ -55,6 +61,12 @@ class MapViewSerializer(MapSerializer):
 
 
 class MapEditSerializer(MapViewSerializer):
+    """MapSerializer used for details/edit views, with all the editable fields.
+
+    This should only be accessible by the "secret" map edit url (since it contains
+    sensitive data, ie. the map edit url)
+    """
+
     class Meta:
         model = Map
         exclude = ['id']

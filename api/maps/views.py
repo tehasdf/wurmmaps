@@ -10,13 +10,20 @@ from maps.serializers import MapViewSerializer, MapEditSerializer, MapFeatureSer
 
 
 class OnlyEditByEditID(BasePermission):
+    """Maps can only be edited when accessed by the edit url
+    """
     def has_object_permission(self, request, view, obj):
         used_id = view.kwargs['id']
         if request.method not in SAFE_METHODS and obj.edit_id != used_id:
             return False
         return True
 
+
 class OnlyEditRelatedByEditID(BasePermission):
+    """Map features can only be edited when the map edit id is provided
+
+    For now, pass the map edit id in the querystring.
+    """
     def has_object_permission(self, request, view, obj):
         used_id = request.GET.get('map')
         if request.method not in SAFE_METHODS and obj.map.edit_id != used_id:
@@ -56,6 +63,17 @@ class MapViewSet(viewsets.ModelViewSet):
         return obj
 
     def get_serializer_class(self):
+        """Choose the serializer, based on action and if we used the edit url.
+
+        There's several possibilities:
+            - we're doing a list action, where we want only public maps, and
+              they're not editable
+            - we're doing a create
+            - we're doing a retrieve action, using the view url
+            - we're doing a retrieve action, using the edit url
+        """
+
+        # XXX can this be simplified?
         if self.action == 'create':
             return MapEditSerializer
 
@@ -69,6 +87,13 @@ class MapViewSet(viewsets.ModelViewSet):
 
 
 class MapFeaturesViewSet(viewsets.ModelViewSet):
+    """CRUD views for map features
+
+    One non-obvious thing here is, you need to provide the map edit id to be
+    able to edit features; for now, this is simply done by passing it in the
+    querystring, eg. `PUT /features/42?map=abcdefgh`.
+    """
+
     lookup_field = 'id'
 
     queryset = MapFeature.objects.all()
