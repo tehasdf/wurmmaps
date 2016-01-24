@@ -11,11 +11,21 @@ const uiReducer = handleActions({
                 [action.payload]: !state.panels[action.payload]
             }
         }
+    },
+
+    SELECT_TOOL: (state, action) => {
+        return {
+            ...state,
+            selectedTool: action.payload
+        }
     }
+
 }, {
+    selectedTool: 'cursor',
     panels: {
         details: true,
-        selected: true
+        selected: true,
+        toolbar: true
     }
 });
 

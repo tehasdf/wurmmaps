@@ -6,7 +6,6 @@ import {deleteFeature} from '../actions/maps';
 
 
 const SelectedElement = ({feature, deleteFeature}) => {
-    console.log('feature', feature);
     if (feature === null){
         return <div />
     }

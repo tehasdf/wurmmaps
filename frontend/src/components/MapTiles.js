@@ -4,7 +4,7 @@ import Draw from 'leaflet-draw';
 import {Map, Rectangle, TileLayer} from 'react-leaflet';
 import {connect} from 'react-redux';
 
-import {createFeature, moveFeature, selectFeature} from '../actions/maps';
+import {mapClick, moveFeature, selectFeature} from '../actions/maps';
 
 
 const SS = L.extend({}, L.CRS, {
@@ -67,7 +67,7 @@ const _getElementFactory = featureType => {
 
 class MapComponent extends React.Component {
     mapClick(evt){
-        this.props.createFeature(evt.latlng);
+        this.props.mapClick(evt.latlng);
     }
 
     makeFeature(feature){
@@ -115,7 +115,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-    createFeature,
+    mapClick,
     moveFeature,
     selectFeature
 };

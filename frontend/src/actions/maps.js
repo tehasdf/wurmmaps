@@ -2,7 +2,7 @@ import fetch from 'isomorphic-fetch';
 import {createAction} from 'redux-actions';
 import request from 'superagent';
 import {getURL} from '../util';
-
+import {selectTool} from './ui';
 
 const startGetMapsList = createAction('START_MAPS_LIST');
 const mapsListReceived = createAction('MAPS_LIST_RECEIVED');
@@ -61,17 +61,28 @@ export const fetchMapDetails = (mapId) => (dispatch, getState) => {
 }
 
 
-export const createFeature = (featureData) => (dispatch, getState) => {
-    dispatch(startCreateFeature(featureData));
-    let state = getState().maps;
-    let mapId = state.selectedMap.id;
-    let featureType = state.selectedType;
+export const mapClick = data => (dispatch, getState) => {
+    let state = getState();
+    let {selectedTool} = state.ui;
 
-    let data = {
-        feature_type: featureType,
-        map: mapId,
-        data: featureData
-    };
+    if (selectedTool === 'reveal'){
+        let mapId = state.maps.selectedMap.id;
+
+        dispatch(createFeature({
+            feature_type: 1,
+            map: mapId,
+            data
+        }));
+
+        dispatch(selectTool('cursor'));
+    }
+}
+
+export const createFeature = data => (dispatch, getState) => {
+    dispatch(startCreateFeature(data));
+    let state = getState().maps;
+
+    let featureType = state.selectedType;
 
     return new Promise((resolve, reject) => {
         request
@@ -173,3 +184,4 @@ export const deleteFeature = feature => (dispatch, getState) => {
 export const selectFeature = feature => (dispatch, getState) => {
     dispatch(featureSelected(feature));
 }
+

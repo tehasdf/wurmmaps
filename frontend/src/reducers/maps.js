@@ -49,8 +49,7 @@ const mapsReducer = handleActions({
 
     START_CREATE_FEATURE: (state, action) => {
         let newFeature = {
-            feature_type: 1,
-            data: action.payload,
+            ...action.payload,
             id: _makeFakeID()
         };
 
@@ -104,6 +103,10 @@ const mapsReducer = handleActions({
         return _setCurrentFeatures(state, newFeatures);
     }
 
-}, {maps: {}, selectedMap: null, selectedType: 1, selectedFeature: null});
+}, {
+    maps: {},
+    selectedMap: null,
+    selectedFeature: null
+});
 
 export default mapsReducer;

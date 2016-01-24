@@ -6,6 +6,7 @@ import Map from './Map';
 import MapList from '../components/MapList';
 import MapDetails from '../components/MapDetails';
 import SelectedElement from '../components/SelectedElement';
+import Toolbar from '../components/Toolbar';
 
 const mapStateToProps = state => {
     return {
@@ -39,6 +40,7 @@ class App extends Component {
         if (this.props.map){
             detailComponents = [
                 <MapDetails key='details' map={this.props.map} />,
+                <Toolbar key='toolbar' />,
                 <SelectedElement key='selected' />
             ]
         }
