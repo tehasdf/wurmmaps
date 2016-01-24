@@ -15,7 +15,7 @@ const store = configureStore();
 const Root = props => (
     <Provider store={store}>
         <Router history={browserHistory}>
-            <Route path="/" component={App}>
+            <Route path={window.BASE_URL} component={App}>
                 <IndexRoute component={MapList} />
                 <Route path="/:mapId" component={Map} />
             </Route>
