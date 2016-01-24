@@ -2,8 +2,11 @@ import React from 'react';
 
 import {Provider} from 'react-redux';
 import configureStore from '../configureStore';
-import App from './App';
+import { Router, Route, browserHistory, IndexRoute} from 'react-router'
 
+import App from './App';
+import Map from '../containers/Map';
+import MapList from '../components/MapList';
 
 const store = configureStore();
 
@@ -11,7 +14,12 @@ const store = configureStore();
 
 const Root = props => (
     <Provider store={store}>
-        <App />
+        <Router history={browserHistory}>
+            <Route path="/" component={App}>
+                <IndexRoute component={MapList} />
+                <Route path="/:mapId" component={Map} />
+            </Route>
+        </Router>
     </Provider>
 );
 

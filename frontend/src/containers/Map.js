@@ -6,9 +6,15 @@ import {fetchMapDetails} from '../actions/maps';
 
 class Map extends Component {
     render(){
-        return <MapTiles />
+        if (!this.props.map){
+            return null;
+        }
+        return <MapTiles map={this.props.map} />
     }
 }
 
+const mapStateToProps = state => ({
+    map: state.maps.selectedMap
+});
 
-export default connect(null, {fetchMapDetails})(Map);
+export default connect(mapStateToProps)(Map);

@@ -75,7 +75,7 @@ class MapComponent extends React.Component {
         let factory = _getElementFactory(feature.feature_type);
         return factory({
             feature,
-            editable: this.props.canEdit,
+            editable: this.props.map.edit,
             callbacks: {
                 moveFeature: this.props.moveFeature,
                 selectFeature: this.props.selectFeature
@@ -84,16 +84,19 @@ class MapComponent extends React.Component {
     }
 
     render(){
-        let elements = this.props.features.map(this.makeFeature.bind(this));
+        let map = this.props.map;
+        let center = map.center || [0.08, 0.66];
+
+        let elements = map.features.map(this.makeFeature.bind(this));
         return <Map
             className="fill"
-            center={this.props.center}
+            center={center}
             zoom={4}
             crs={SS}
             onLeafletClick={this.mapClick.bind(this)}
         >
             <TileLayer
-                url={getURL(`/static/tiles/${this.props.mapname}/{z}/{x}/{y}.png`)}
+                url={getURL(`/static/tiles/${map.mapname}/{z}/{x}/{y}.png`)}
                 tms={true}
                 noWrap={true}
             />
@@ -102,18 +105,6 @@ class MapComponent extends React.Component {
     }
 }
 
-const mapStateToProps = state => {
-    let map = state.maps.selectedMap;
-    let features = (map !== undefined) ? map.features : [];
-
-    return {
-        map,
-        features,
-        center: [0.08, 0.66],
-        mapname: map.mapname,
-        canEdit: map.edit
-    }
-};
 
 const mapDispatchToProps = {
     mapClick,
@@ -122,4 +113,4 @@ const mapDispatchToProps = {
 };
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(MapComponent);
+export default connect(null, mapDispatchToProps)(MapComponent);

@@ -3,6 +3,7 @@ import {createAction} from 'redux-actions';
 import request from 'superagent';
 import {getURL} from '../util';
 import {selectTool} from './ui';
+import { routeActions } from 'redux-simple-router'
 
 const startGetMapsList = createAction('START_MAPS_LIST');
 const mapsListReceived = createAction('MAPS_LIST_RECEIVED');
@@ -37,9 +38,7 @@ export const selectMap = (mapId) => (dispatch, getState) => {
     dispatch(mapSelected(mapId));
     dispatch(fetchMapDetails(mapId));
 
-    if (window && window.location){
-        window.location.hash = `map=${mapId}`;
-    }
+    dispatch(routeActions.push(`/${mapId}`));
 }
 
 
