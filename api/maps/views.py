@@ -69,6 +69,8 @@ class MapViewSet(viewsets.ModelViewSet):
 
 
 class MapFeaturesViewSet(viewsets.ModelViewSet):
+    lookup_field = 'id'
+
     queryset = MapFeature.objects.all()
     serializer_class = MapFeatureSerializer
 

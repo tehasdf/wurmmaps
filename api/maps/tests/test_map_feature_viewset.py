@@ -60,3 +60,33 @@ class TestAddingMapFeatures(TestCase):
             json.dumps(data), content_type='application/json')
         self.assertEqual(response.status_code, 400)
         self.assertEqual(self.obj.features.count(), 0)
+
+
+
+class TestEdit(TestCase):
+    def setUp(self):
+        self.obj = Map(name='the map', edit_id='edit_id', view_id='view_id')
+        self.obj.save()
+        self.feature = MapFeature(feature_type=MapFeature.TYPE_REVEAL, map=self.obj,
+            data='123')
+        self.feature.save()
+
+    def test_edit_data_by_edit_id(self):
+        url = (reverse('features-detail', kwargs={'id': self.feature.id})
+            + '?map=%s' % self.feature.map.edit_id)
+
+        response = self.client.patch(url, json.dumps({'data': 443}),
+            content_type='application/json')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['data'], 443)
+        self.assertEqual(response.data['id'], self.feature.id)
+
+    def test_edit_data_by_view_id(self):
+        url = (reverse('features-detail', kwargs={'id': self.feature.id})
+            + '?map=%s' % self.feature.map.view_id)
+
+        response = self.client.patch(url, None,
+            content_type='application/json')
+
+        self.assertEqual(response.status_code, 403)
