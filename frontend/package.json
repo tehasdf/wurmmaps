@@ -10,7 +10,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "isomorphic-fetch": "^2.2.0",
     "leaflet": "^0.7.7",
     "leaflet-draw": "^0.2.3",
     "react": "^0.14.3",

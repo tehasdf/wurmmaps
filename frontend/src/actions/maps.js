@@ -1,4 +1,3 @@
-import fetch from 'isomorphic-fetch';
 import {createAction} from 'redux-actions';
 import request from 'superagent';
 import {getURL} from '../util';
@@ -43,18 +42,34 @@ export const selectMap = (mapId) => (dispatch, getState) => {
 export const fetchMaps = () => (dispatch, getState) => {
     dispatch(startGetMapsList());
 
-    return fetch(getURL('maps/'))
-        .then(r => r.json())
-        .then(data => dispatch(mapsListReceived(data)));
+    return request
+        .get(getURL('maps/'))
+        .set('Accept', 'application/json')
+        .end((err, res) => {
+            if (err){
+                console.error(err)
+            } else {
+                let data = JSON.parse(res.text);
+                dispatch(mapsListReceived(data));
+            }
+        });
 }
 
 
 export const fetchMapDetails = (mapId) => (dispatch, getState) => {
     dispatch(startGetMapDetails(mapId));
 
-    return fetch(getURL(`maps/${mapId}/`))
-        .then(r => r.json())
-        .then(data => dispatch(mapDetailsReceived(data)))
+    return request
+        .get(getURL(`maps/${mapId}/`))
+        .set('Accept', 'application/json')
+        .end((err, res) => {
+            if (err){
+                console.error(err)
+            } else {
+                let data = JSON.parse(res.text);
+                dispatch(mapDetailsReceived(data));
+            }
+        });
 }
 
 
