@@ -1,1 +1,0 @@
-gdal2tiles.py -p raster -z 0-6 -w none independence.png independence

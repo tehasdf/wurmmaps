@@ -20,6 +20,9 @@ module.exports = {
             },
             '/features/*': {
                 target: 'http://127.0.0.1:8000/'
+            },
+            '/static/tiles/*': {
+                target: 'http://127.0.0.1:8000/'
             }
         }
     }

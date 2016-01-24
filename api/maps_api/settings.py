@@ -100,3 +100,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 CORS_ORIGIN_ALLOW_ALL = True
+
+STATICFILES_DIRS = [
+    os.path.normpath(os.path.join(BASE_DIR, '..', 'static'))
+]
+
