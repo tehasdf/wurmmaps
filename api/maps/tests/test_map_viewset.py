@@ -50,7 +50,8 @@ class TestUpdating(TestCase):
 
 class TestCreating(TestCase):
     def test_creates_with_edit_id(self):
-        response = self.client.post(reverse('maps-list'), {'name': 'foobar'})
+        data = {'name': 'foobar', 'mapname': 'independence'}
+        response = self.client.post(reverse('maps-list'), data)
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.data['name'], 'foobar')
 
